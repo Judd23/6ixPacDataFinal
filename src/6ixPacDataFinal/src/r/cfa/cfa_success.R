@@ -1,8 +1,8 @@
 # Load necessary libraries
 library(lavaan)
 
-# Load the cleaned dataset
-data <- read.csv("data/clean/final.csv")
+# Load the dataset 'df_subset' per request
+data <- read.csv("data/interim/df_subset.csv")
 
 # Specify the CFA model for the latent variable "SUCCESS"
 model <- '
@@ -19,3 +19,5 @@ summary(fit, fit.measures = TRUE, standardized = TRUE)
 sink("results/cfa_success_results.txt")
 summary(fit, fit.measures = TRUE, standardized = TRUE)
 sink()
+
+
