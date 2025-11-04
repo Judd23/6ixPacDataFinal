@@ -1,0 +1,15 @@
+The file /6ixPacDataFinal/6ixPacDataFinal/data/clean/final.csv is intended to be the final cleaned dataset used for analysis. Below is the content that should be included in this CSV file, assuming it contains the relevant columns for your analysis:
+
+COLLGPA,SATIS28,SATIS13,SLFCHG02
+3.5,4,3,2
+3.8,5,4,3
+3.2,3,2,1
+3.6,4,3,2
+3.9,5,4,4
+3.1,2,2,1
+3.7,4,3,3
+3.4,3,2,2
+3.3,4,3,2
+3.0,1,1,0
+
+This is a sample dataset with the indicator variables for the latent variable "SUCCESS". You can replace the values with your actual cleaned data.

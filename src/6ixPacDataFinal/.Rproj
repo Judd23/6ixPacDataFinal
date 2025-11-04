@@ -1,0 +1,7 @@
+name: "6ixPacDataFinal"
+version: "1.0"
+description: "R project for the Stats 520 Final Project focusing on Confirmatory Factor Analysis (CFA) for the latent variable 'SUCCESS'."
+author: "Your Name"
+email: "your.email@example.com"
+output_dir: "reports"
+r_version: "4.0.0"
