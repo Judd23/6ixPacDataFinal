@@ -162,4 +162,16 @@ if (any(miss_props > 0.05)) {
   }
 }
 
-message("CFA complete. Results saved to: ", out_dir)
+message("CFA complete. Results saved to: ", out_dir)# 1) Update Homebrew and upgrade formulae
+brew update
+brew upgrade
+
+# 2) Ensure Xcode command-line tools are installed (if not already)
+xcode-select --install
+
+# 3) Ensure Fortran/gcc toolchain is available (Homebrew)
+brew install gcc
+# If gcc is already installed, you may need to reinstall to match latest: brew reinstall gcc
+
+# 4) Install required R packages (CRAN binaries where available)
+Rscript -e 'install.packages(c("tidyverse","lavaan","semTools","psych","mice"), repos="https://cloud.r-project.org", dependencies=TRUE)'
