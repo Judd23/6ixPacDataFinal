@@ -1,11 +1,48 @@
- Code: IMPORTING OFFDATAHERI.sas
+/*Code: IMPORTING OFFDATAHERI.sas*/
  FILENAME REFFILE '/home/u64136608/STAT 520 PROJECT/OffData_Final.csv'; 
-PROC IMPORT DATAFILE=REFFILE 
-DBMS=CSV 
-OUT=WORK.OFFDATAHERI; 
-GETNAMES=YES; 
-RUN; 
-LIBNAME STPROJ "/home/u64136608/STAT 520 PROJECT"; 
-DATA STPROJ.OFFDATAHERI; 
-SET WORK.OFFDATAHERI; 
+   PROC IMPORT DATAFILE=REFFILE 
+    DBMS=CSV 
+    OUT=WORK.OFFDATAHERI; 
+    GETNAMES=YES; 
+   RUN; 
+ LIBNAME STPROJ "/home/u64136608/STAT 520 PROJECT"; 
+   DATA STPROJ.OFFDATAHERI; 
+   SET WORK.OFFDATAHERI; 
 RUN;
+
+/*Code: OFFDATAHERI metadata.sas*/
+ TITLE Metadata; 
+PROC CONTENTS DATA=STPROJ.OFFDATAHERI; 
+RUN;
+
+ /*Code: adhoc and norality for OFFDATAHERI.sas*/
+ ods noproctitle; 
+/*** Analyze ALL numeric variables ***/ 
+title "Descriptive Statistics for ALL Numeric Variables"; 
+proc means data=STPROJ.OFFDATAHERI n nmiss min mean median max std; 
+var _numeric_; 
+run; 
+title; 
+proc univariate data=STPROJ.OFFDATAHERI noprint; 
+histogram _numeric_; 
+run; 
+title; 
+/* ---------- HISTOGRAMS ---------- */ 
+title "Histograms for All Numeric Variables"; 
+proc univariate data=STPROJ.OFFDATAHERI; 
+var _numeric_; 
+histogram / normal; /* includes normal curve */ 
+run; 
+/*** Histograms & Normality Tests ***/ 
+title "Histograms and Normality Tests for All Numeric Variables"; 
+proc univariate data=STPROJ.OFFDATAHERI normal; 
+var _numeric_; 
+histogram / normal;   
+inset n mean std skewness kurtosis / position=ne; 
+run; 
+title; 
+/*** Correlations for ALL numeric variables ***/ 
+title "Correlation Matrix for All Numeric Variables"; 
+proc corr data=STPROJ.OFFDATAHERI pearson spearman; 
+var _numeric_; 
+run;
