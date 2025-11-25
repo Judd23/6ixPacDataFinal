@@ -1,0 +1,101 @@
+lavaan 0.6-20 ended normally after 31 iterations
+
+  Estimator                                       DWLS
+  Optimization method                           NLMINB
+  Number of model parameters                        21
+
+                                                  Used       Total
+  Number of observations                          4901        5000
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                                 2.422       3.412
+  Degrees of freedom                                 2           2
+  P-value (Chi-square)                           0.298       0.182
+  Scaling correction factor                                  0.724
+  Shift parameter                                            0.067
+    simple second-order correction                                
+
+Model Test Baseline Model:
+
+  Test statistic                              4462.462    4008.055
+  Degrees of freedom                                 6           6
+  P-value                                        0.000       0.000
+  Scaling correction factor                                  1.114
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    1.000       1.000
+  Tucker-Lewis Index (TLI)                       1.000       0.999
+                                                                  
+  Robust Comparative Fit Index (CFI)                         1.000
+  Robust Tucker-Lewis Index (TLI)                            0.999
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.007       0.012
+  90 Percent confidence interval - lower         0.000       0.000
+  90 Percent confidence interval - upper         0.030       0.033
+  P-value H_0: RMSEA <= 0.050                    1.000       0.999
+  P-value H_0: RMSEA >= 0.080                    0.000       0.000
+                                                                  
+  Robust RMSEA                                               0.010
+  90 Percent confidence interval - lower                     0.000
+  90 Percent confidence interval - upper                     0.039
+  P-value H_0: Robust RMSEA <= 0.050                         0.993
+  P-value H_0: Robust RMSEA >= 0.080                         0.000
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.008       0.008
+
+Parameter Estimates:
+
+  Parameterization                               Delta
+  Standard errors                           Robust.sem
+  Information                                 Expected
+  Information saturated (h1) model        Unstructured
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+  SUCCESS =~                                                            
+    COLLGPA           1.000                               0.148    0.148
+    SATIS28           6.666    0.835    7.981    0.000    0.988    0.988
+    SATIS13           4.212    0.470    8.952    0.000    0.624    0.624
+    SLFCHG02          2.024    0.246    8.224    0.000    0.300    0.300
+
+Thresholds:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    COLLGPA|t1       -3.233    0.165  -19.608    0.000   -3.233   -3.233
+    COLLGPA|t2       -2.276    0.051  -44.869    0.000   -2.276   -2.276
+    COLLGPA|t3       -1.282    0.024  -52.481    0.000   -1.282   -1.282
+    COLLGPA|t4       -0.231    0.018  -12.772    0.000   -0.231   -0.231
+    COLLGPA|t5        1.036    0.022   47.354    0.000    1.036    1.036
+    SATIS28|t1       -2.814    0.093  -30.353    0.000   -2.814   -2.814
+    SATIS28|t2       -1.866    0.035  -52.702    0.000   -1.866   -1.866
+    SATIS28|t3       -1.058    0.022  -47.938    0.000   -1.058   -1.058
+    SATIS28|t4        0.399    0.018   21.635    0.000    0.399    0.399
+    SATIS13|t1       -2.411    0.058  -41.440    0.000   -2.411   -2.411
+    SATIS13|t2       -1.108    0.023  -49.184    0.000   -1.108   -1.108
+    SATIS13|t3       -0.384    0.018  -20.899    0.000   -0.384   -0.384
+    SATIS13|t4        0.710    0.020   36.158    0.000    0.710    0.710
+    SLFCHG02|t1      -2.905    0.104  -27.866    0.000   -2.905   -2.905
+    SLFCHG02|t2      -2.505    0.064  -38.909    0.000   -2.505   -2.505
+    SLFCHG02|t3      -1.505    0.028  -54.484    0.000   -1.505   -1.505
+    SLFCHG02|t4       0.311    0.018   17.041    0.000    0.311    0.311
+
+Variances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+   .COLLGPA           0.978                               0.978    0.978
+   .SATIS28           0.023                               0.023    0.023
+   .SATIS13           0.610                               0.610    0.610
+   .SLFCHG02          0.910                               0.910    0.910
+    SUCCESS           0.022    0.005    4.391    0.000    1.000    1.000
+
+R-Square:
+                   Estimate
+    COLLGPA           0.022
+    SATIS28           0.977
+    SATIS13           0.390
+    SLFCHG02          0.090
+

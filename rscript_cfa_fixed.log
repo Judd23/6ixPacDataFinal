@@ -1,0 +1,118 @@
+Installing missing packages: tidyverse, mice
+Installing packages into ‘/opt/homebrew/lib/R/4.5/site-library’
+(as ‘lib’ is unspecified)
+also installing the dependencies ‘nloptr’, ‘lme4’, ‘textshaping’, ‘jomo’, ‘ragg’, ‘mitml’
+
+trying URL 'https://cloud.r-project.org/src/contrib/nloptr_2.2.1.tar.gz'
+trying URL 'https://cloud.r-project.org/src/contrib/lme4_1.1-37.tar.gz'
+trying URL 'https://cloud.r-project.org/src/contrib/textshaping_1.0.4.tar.gz'
+trying URL 'https://cloud.r-project.org/src/contrib/jomo_2.7-6.tar.gz'
+trying URL 'https://cloud.r-project.org/src/contrib/ragg_1.5.0.tar.gz'
+trying URL 'https://cloud.r-project.org/src/contrib/mitml_0.4-5.tar.gz'
+trying URL 'https://cloud.r-project.org/src/contrib/tidyverse_2.0.0.tar.gz'
+trying URL 'https://cloud.r-project.org/src/contrib/mice_3.18.0.tar.gz'
+* installing *source* package ‘nloptr’ ...
+** this is package ‘nloptr’ version ‘2.2.1’
+** package ‘nloptr’ successfully unpacked and MD5 sums checked
+** using staged installation
+checking whether the C++ compiler works... yes
+checking for C++ compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether the compiler supports GNU C++... yes
+checking whether clang++ -std=gnu++17 accepts -g... yes
+checking for clang++ -std=gnu++17 option to enable C++11 features... none needed
+checking how to run the C++ preprocessor... clang++ -std=gnu++17 -E
+checking whether the compiler supports GNU C++... (cached) yes
+checking whether clang++ -std=gnu++17 accepts -g... (cached) yes
+checking for clang++ -std=gnu++17 option to enable C++11 features... (cached) none needed
+checking for pkg-config... no
+checking for cmake... no
+
+------------------ CMAKE NOT FOUND --------------------
+
+CMake was not found on the PATH. Please install CMake:
+
+ - sudo yum install cmake          (Fedora/CentOS; inside a terminal)
+ - sudo apt install cmake          (Debian/Ubuntu; inside a terminal).
+ - sudo pacman -S cmake            (Arch Linux; inside a terminal).
+ - brew install --cask cmake       (MacOS; inside a terminal with Homebrew)
+ - sudo port install cmake         (MacOS; inside a terminal with MacPorts)
+
+Alternatively install CMake from: <https://cmake.org/>
+
+-------------------------------------------------------
+
+ERROR: configuration failed for package ‘nloptr’
+* removing ‘/opt/homebrew/lib/R/4.5/site-library/nloptr’
+* installing *source* package ‘textshaping’ ...
+** this is package ‘textshaping’ version ‘1.0.4’
+** package ‘textshaping’ successfully unpacked and MD5 sums checked
+** using staged installation
+Homebrew 4.6.20
+Using PKG_CFLAGS=-I/opt/homebrew/include/freetype2 -I/opt/homebrew/include/harfbuzz -I/opt/homebrew/include/glib-2.0  -I/opt/homebrew/include/fribidi
+Using PKG_LIBS=-lfreetype -lharfbuzz -lfribidi -lpng
+--------------------------- [ANTICONF] --------------------------------
+Configuration failed to find the --static harfbuzz freetype2 fribidi library. Try installing:
+ * deb: libharfbuzz-dev libfribidi-dev (Debian, Ubuntu, etc)
+ * rpm: harfbuzz-devel fribidi-devel (Fedora, EPEL)
+ * brew: harfbuzz fribidi (OSX)
+If --static harfbuzz freetype2 fribidi is already installed, check that 'pkg-config' is in your
+PATH and PKG_CONFIG_PATH contains a --static harfbuzz freetype2 fribidi.pc file. If pkg-config
+is unavailable you can set INCLUDE_DIR and LIB_DIR manually via:
+R CMD INSTALL --configure-vars='INCLUDE_DIR=... LIB_DIR=...'
+-------------------------- [ERROR MESSAGE] ---------------------------
+<stdin>:1:10: fatal error: 'hb-ft.h' file not found
+    1 | #include <hb-ft.h>
+      |          ^~~~~~~~~
+1 error generated.
+--------------------------------------------------------------------
+ERROR: configuration failed for package ‘textshaping’
+* removing ‘/opt/homebrew/lib/R/4.5/site-library/textshaping’
+ERROR: dependency ‘nloptr’ is not available for package ‘lme4’
+Perhaps try a variation of:
+install.packages('nloptr')
+* removing ‘/opt/homebrew/lib/R/4.5/site-library/lme4’
+ERROR: dependency ‘textshaping’ is not available for package ‘ragg’
+Perhaps try a variation of:
+install.packages('textshaping')
+* removing ‘/opt/homebrew/lib/R/4.5/site-library/ragg’
+ERROR: dependency ‘lme4’ is not available for package ‘jomo’
+Perhaps try a variation of:
+install.packages('lme4')
+* removing ‘/opt/homebrew/lib/R/4.5/site-library/jomo’
+ERROR: dependency ‘ragg’ is not available for package ‘tidyverse’
+Perhaps try a variation of:
+install.packages('ragg')
+* removing ‘/opt/homebrew/lib/R/4.5/site-library/tidyverse’
+ERROR: dependency ‘jomo’ is not available for package ‘mitml’
+Perhaps try a variation of:
+install.packages('jomo')
+* removing ‘/opt/homebrew/lib/R/4.5/site-library/mitml’
+ERROR: dependency ‘mitml’ is not available for package ‘mice’
+Perhaps try a variation of:
+install.packages('mitml')
+* removing ‘/opt/homebrew/lib/R/4.5/site-library/mice’
+
+The downloaded source packages are in
+	‘/private/var/folders/b7/007cmb995md31r8bsp8j159rp3y38h/T/RtmpX5MFm5/downloaded_packages’
+Warning messages:
+1: In install.packages(missing_pkgs, repos = "https://cloud.r-project.org") :
+  installation of package ‘nloptr’ had non-zero exit status
+2: In install.packages(missing_pkgs, repos = "https://cloud.r-project.org") :
+  installation of package ‘textshaping’ had non-zero exit status
+3: In install.packages(missing_pkgs, repos = "https://cloud.r-project.org") :
+  installation of package ‘lme4’ had non-zero exit status
+4: In install.packages(missing_pkgs, repos = "https://cloud.r-project.org") :
+  installation of package ‘ragg’ had non-zero exit status
+5: In install.packages(missing_pkgs, repos = "https://cloud.r-project.org") :
+  installation of package ‘jomo’ had non-zero exit status
+6: In install.packages(missing_pkgs, repos = "https://cloud.r-project.org") :
+  installation of package ‘tidyverse’ had non-zero exit status
+7: In install.packages(missing_pkgs, repos = "https://cloud.r-project.org") :
+  installation of package ‘mitml’ had non-zero exit status
+8: In install.packages(missing_pkgs, repos = "https://cloud.r-project.org") :
+  installation of package ‘mice’ had non-zero exit status
+Error in library(tidyverse) : there is no package called ‘tidyverse’
+Execution halted

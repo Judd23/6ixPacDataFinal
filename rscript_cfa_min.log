@@ -1,0 +1,120 @@
+Installing package into ‘/opt/homebrew/lib/R/4.5/site-library’
+(as ‘lib’ is unspecified)
+also installing the dependencies ‘mnormt’, ‘pbivnorm’, ‘numDeriv’, ‘quadprog’
+
+trying URL 'https://cloud.r-project.org/src/contrib/mnormt_2.1.1.tar.gz'
+trying URL 'https://cloud.r-project.org/src/contrib/pbivnorm_0.6.0.tar.gz'
+trying URL 'https://cloud.r-project.org/src/contrib/numDeriv_2016.8-1.1.tar.gz'
+trying URL 'https://cloud.r-project.org/src/contrib/quadprog_1.5-8.tar.gz'
+trying URL 'https://cloud.r-project.org/src/contrib/lavaan_0.6-20.tar.gz'
+* installing *source* package ‘mnormt’ ...
+** this is package ‘mnormt’ version ‘2.1.1’
+** package ‘mnormt’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘Apple clang version 17.0.0 (clang-1700.3.19.1)’
+using Fortran compiler: ‘GNU Fortran (Homebrew GCC 15.2.0) 15.2.0’
+using SDK: ‘MacOSX26.0.sdk’
+/opt/homebrew/opt/gcc/bin/gfortran  -fPIC  -g -O2  -c biv-nt.f -o biv-nt.o
+clang -std=gnu23 -I"/opt/homebrew/Cellar/r/4.5.1/lib/R/include" -DNDEBUG   -I/opt/homebrew/opt/gettext/include -I/opt/homebrew/opt/readline/include -I/opt/homebrew/opt/xz/include -I/opt/homebrew/include    -fPIC  -g -O2  -c mnormt_init.c -o mnormt_init.o
+/opt/homebrew/opt/gcc/bin/gfortran  -fPIC  -g -O2  -c rtmng.f -o rtmng.o
+/opt/homebrew/opt/gcc/bin/gfortran  -fPIC  -g -O2  -c sadmvnt.f -o sadmvnt.o
+/opt/homebrew/opt/gcc/bin/gfortran  -fPIC  -g -O2  -c tvpack.f -o tvpack.o
+clang -std=gnu23 -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -L/opt/homebrew/Cellar/r/4.5.1/lib/R/lib -L/opt/homebrew/opt/gettext/lib -L/opt/homebrew/opt/readline/lib -L/opt/homebrew/opt/xz/lib -L/opt/homebrew/lib -o mnormt.so biv-nt.o mnormt_init.o rtmng.o sadmvnt.o tvpack.o -L/opt/homebrew/opt/gcc/lib/gcc/current/gcc/aarch64-apple-darwin25/15 -L/opt/homebrew/opt/gcc/lib/gcc/current/gcc -L/opt/homebrew/opt/gcc/lib/gcc/current -lemutls_w -lheapt_w -lgfortran -lquadmath -L/opt/homebrew/Cellar/r/4.5.1/lib/R/lib -lR
+installing to /opt/homebrew/lib/R/4.5/site-library/00LOCK-mnormt/00new/mnormt/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (mnormt)
+* installing *source* package ‘pbivnorm’ ...
+** this is package ‘pbivnorm’ version ‘0.6.0’
+** package ‘pbivnorm’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using Fortran compiler: ‘GNU Fortran (Homebrew GCC 15.2.0) 15.2.0’
+using SDK: ‘MacOSX26.0.sdk’
+/opt/homebrew/opt/gcc/bin/gfortran  -fPIC  -g -O2  -c pbivnorm.f -o pbivnorm.o
+clang -std=gnu23 -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -L/opt/homebrew/Cellar/r/4.5.1/lib/R/lib -L/opt/homebrew/opt/gettext/lib -L/opt/homebrew/opt/readline/lib -L/opt/homebrew/opt/xz/lib -L/opt/homebrew/lib -o pbivnorm.so pbivnorm.o -L/opt/homebrew/opt/gcc/lib/gcc/current/gcc/aarch64-apple-darwin25/15 -L/opt/homebrew/opt/gcc/lib/gcc/current/gcc -L/opt/homebrew/opt/gcc/lib/gcc/current -lemutls_w -lheapt_w -lgfortran -lquadmath -L/opt/homebrew/Cellar/r/4.5.1/lib/R/lib -lR
+installing to /opt/homebrew/lib/R/4.5/site-library/00LOCK-pbivnorm/00new/pbivnorm/libs
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (pbivnorm)
+* installing *source* package ‘numDeriv’ ...
+** this is package ‘numDeriv’ version ‘2016.8-1.1’
+** package ‘numDeriv’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (numDeriv)
+* installing *source* package ‘quadprog’ ...
+** this is package ‘quadprog’ version ‘1.5-8’
+** package ‘quadprog’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘Apple clang version 17.0.0 (clang-1700.3.19.1)’
+using Fortran compiler: ‘GNU Fortran (Homebrew GCC 15.2.0) 15.2.0’
+using SDK: ‘MacOSX26.0.sdk’
+/opt/homebrew/opt/gcc/bin/gfortran  -fvisibility=hidden -fPIC -g -O2   -fPIC  -g -O2  -c aind.f -o aind.o
+clang -std=gnu23 -I"/opt/homebrew/Cellar/r/4.5.1/lib/R/include" -DNDEBUG   -I/opt/homebrew/opt/gettext/include -I/opt/homebrew/opt/readline/include -I/opt/homebrew/opt/xz/include -I/opt/homebrew/include    -fPIC  -g -O2  -c init.c -o init.o
+/opt/homebrew/opt/gcc/bin/gfortran  -fvisibility=hidden -fPIC -g -O2   -fPIC  -g -O2  -c solve.QP.compact.f -o solve.QP.compact.o
+/opt/homebrew/opt/gcc/bin/gfortran  -fvisibility=hidden -fPIC -g -O2   -fPIC  -g -O2  -c solve.QP.f -o solve.QP.o
+/opt/homebrew/opt/gcc/bin/gfortran  -fvisibility=hidden -fPIC -g -O2   -fPIC  -g -O2  -c util.f -o util.o
+clang -std=gnu23 -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -L/opt/homebrew/Cellar/r/4.5.1/lib/R/lib -L/opt/homebrew/opt/gettext/lib -L/opt/homebrew/opt/readline/lib -L/opt/homebrew/opt/xz/lib -L/opt/homebrew/lib -o quadprog.so aind.o init.o solve.QP.compact.o solve.QP.o util.o -L/opt/homebrew/opt/openblas/lib -lopenblas -L/opt/homebrew/opt/gcc/lib/gcc/current/gcc/aarch64-apple-darwin25/15 -L/opt/homebrew/opt/gcc/lib/gcc/current/gcc -L/opt/homebrew/opt/gcc/lib/gcc/current -lemutls_w -lheapt_w -lgfortran -lquadmath -L/opt/homebrew/opt/gcc/lib/gcc/current/gcc/aarch64-apple-darwin25/15 -L/opt/homebrew/opt/gcc/lib/gcc/current/gcc -L/opt/homebrew/opt/gcc/lib/gcc/current -lemutls_w -lheapt_w -lgfortran -lquadmath -L/opt/homebrew/Cellar/r/4.5.1/lib/R/lib -lR
+ld: warning: ignoring duplicate libraries: '-lemutls_w', '-lgfortran', '-lheapt_w', '-lquadmath'
+installing to /opt/homebrew/lib/R/4.5/site-library/00LOCK-quadprog/00new/quadprog/libs
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (quadprog)
+* installing *source* package ‘lavaan’ ...
+** this is package ‘lavaan’ version ‘0.6-20’
+** package ‘lavaan’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** data
+*** moving datasets to lazyload DB
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (lavaan)
+
+The downloaded source packages are in
+	‘/private/var/folders/b7/007cmb995md31r8bsp8j159rp3y38h/T/Rtmp2lBhFw/downloaded_packages’
+New names:
+• `CSSRAT07` -> `CSSRAT07...6`
+• `CSSRAT07` -> `CSSRAT07...15`
+Error: Missing variables: COLLGPA, SATIS28
+Execution halted
