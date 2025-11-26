@@ -1,6 +1,6 @@
-# 6ixPacDataFinal – STAT 520 Final Project Repository
+6ixPacDataFinal – STAT 520 Final Project Repository
 
-This repository contains the full workflow for the 6ix Pac Data Dawgs, STAT 520 project, including data management, exploratory analysis, factor analysis, structural modeling, machine learning, visualizations, and the final report materials. The goal of our repository design is to make the project accessible for us new learners, while supporting advanced reproducible statistical analysis.
+This repository contains the full workflow for the 6ix Pac Data Dawgs, STAT 520 project, including data management, exploratory analysis, factor analysis, structural modeling, machine learning, visualizations, and the final report materials.
 
 Folder focus: `docs/`
 
