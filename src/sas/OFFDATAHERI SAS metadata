@@ -1,0 +1,5 @@
+
+/*Code: OFFDATAHERI metadata.sas*/
+ TITLE Metadata; 
+PROC CONTENTS DATA=STPROJ.OFFDATAHERI; 
+RUN;

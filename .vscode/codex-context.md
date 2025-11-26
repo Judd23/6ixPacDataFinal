@@ -49,3 +49,4 @@ Common tasks:
 - Read final dataset in Python or R, summarize, plot, fit simple models.
 - Suggest setup (methods, predictors), CFA/SEM syntax (lavaan), and fit indices.
 - Explain outputs in plain language; propose next steps.
+- 
