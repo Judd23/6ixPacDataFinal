@@ -27,7 +27,7 @@ model <-'
 
 
 # (residual) (co)variances
- StudBackground ~~ StudBackground'
+ HistDisadv ~~ HistDisadv'
 
 result <- lavaan(model, data, meanstructure = "default",
 		 int.ov.free = TRUE, int.lv.free = FALSE,
