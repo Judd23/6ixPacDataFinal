@@ -1,0 +1,65 @@
+---
+title: "Institutional Engagement Latent Variable"
+output: html_document
+date: "2025-11-18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error = TRUE)
+```
+
+```{r}
+library(psych)
+library(lavaan)
+library(semTools)
+library(GPArotation)
+library(dplyr)
+library(ggplot2)
+data <- read.csv("C:/Users/aiden/OneDrive/Documents/STAT 520/Project Files/OfficialDataset_Final.csv")
+
+have_semTools <- requireNamespace("semTools", quietly = TRUE)
+
+model <-'
+# measurement model
+ InstitEngage =~ SATIS07 + SATIS25 + SATIS13 + SATIS15 + SATIS01
+                   
+
+
+# (residual) (co)variances
+ InstitEngage ~~ InstitEngage'
+
+result <- lavaan(model, data, meanstructure = "default",
+		 int.ov.free = TRUE, int.lv.free = FALSE,
+		 estimator = "default", se = "default",
+		 missing = "listwise", auto.fix.first = TRUE,
+		 auto.fix.single = TRUE, auto.var = TRUE,
+		 auto.cov.lv.x = TRUE, auto.cov.y = TRUE,
+  		 fixed.x = TRUE, auto.th = TRUE, 
+  		 auto.delta = TRUE)
+
+
+message("\n--- Model Summary ---")
+print(summary(result, result.measures = TRUE, standardized = TRUE))
+message("\n--- Fit Measures (key indices) ---")
+print(fitMeasures(result, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "rmsea.ci.lower", "rmsea.ci.upper", "srmr")))
+message("\n--- Parameter Estimates (loadings) ---")
+pe <- parameterEstimates(result, standardized = TRUE)
+loadings <- subset(pe, op == "=~", select = c(lhs, rhs, est, se, z, pvalue, std.all))
+print(loadings)
+message("\n--- Residual Variances ---")
+resid_vars <- subset(pe, op == "~~" & lhs %in% model & lhs == rhs, select = c(lhs, est, se, z, pvalue))
+print(resid_vars)
+message("\n--- R-squared ---")
+print(inspect(result, "r2"))
+if (have_semTools) {
+message("\n--- Reliability (semTools::reliability) ---")
+print(semTools::reliability(result))
+message("\n--- Average Variance Extracted (semTools::AVE) ---")
+print(semTools::AVE(result))
+} else {
+message("\n(Note: Install 'semTools' to obtain reliability/AVE.)")
+}
+message("\n=== End of CFA report ===")
+
+```
+
