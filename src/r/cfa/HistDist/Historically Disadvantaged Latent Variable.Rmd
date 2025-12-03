@@ -28,20 +28,36 @@ have_semTools <- requireNamespace("semTools", quietly = TRUE)
 model <-'
 # measurement model
  HistDisadv =~ FirstGen_RC + UndrRepStud_RC + 
-                   FINCON_RC
+                   FINCON_RC + INCOME + CITIZEN
 
 
 # (residual) (co)variances
  HistDisadv ~~ HistDisadv'
 
-result <- lavaan(model, data, meanstructure = "default",
-		 int.ov.free = TRUE, int.lv.free = FALSE,
-				 estimator = "default", se = "default",
-				 missing = "fiml", auto.fix.first = TRUE,
-		 auto.fix.single = TRUE, auto.var = TRUE,
-		 auto.cov.lv.x = TRUE, auto.cov.y = TRUE,
-  		 fixed.x = TRUE, auto.th = TRUE, 
-  		 auto.delta = TRUE)
+## Prepare indicators as ordered (categorical) and fit with WLSMV
+inds <- c("FirstGen_RC", "UndrRepStud_RC", "FINCON_RC", "INCOME", "CITIZEN")
+data2 <- data
+for (v in inds) {
+	if (v %in% names(data2)) {
+		# coerce to integer where possible, keep NAs
+		data2[[v]] <- ifelse(is.na(data2[[v]]), NA, as.integer(data2[[v]]))
+		# treat as ordered (lavaan will handle binary/ordinal)
+		data2[[v]] <- ordered(data2[[v]])
+	}
+}
+
+# Fit with WLSMV for categorical indicators; fallback to ML if it errors
+result <- tryCatch(
+	lavaan::cfa(model, data = data2, ordered = intersect(inds, names(data2)), estimator = "WLSMV", missing = "pairwise"),
+	error = function(e) {
+		message('WLSMV failed; falling back to ML with FIML: ', e$message)
+		lavaan::lavaan(model, data = data, meanstructure = TRUE,
+									 estimator = "ML", missing = "fiml",
+									 auto.fix.first = TRUE, auto.fix.single = TRUE,
+									 auto.var = TRUE, auto.cov.lv.x = TRUE, auto.cov.y = TRUE,
+									 fixed.x = TRUE)
+	}
+)
 
 
 message("\n--- Model Summary ---")
