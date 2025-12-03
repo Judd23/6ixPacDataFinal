@@ -1,0 +1,60 @@
+knitr::opts_chunk$set(echo = TRUE, error = TRUE)
+
+library(psych)
+library(lavaan)
+library(semTools)
+library(GPArotation)
+library(dplyr)
+library(ggplot2)
+
+data_path <- file.path("data", "clean", "OfficialDataset_Final.csv")
+if (!file.exists(data_path)) {
+	stop("Missing clean dataset at ", data_path)
+}
+data <- read.csv(data_path)
+
+
+have_semTools <- requireNamespace("semTools", quietly = TRUE)
+
+model <-'
+# measurement model
+ HistDisadv =~ FirstGen_RC + UndrRepStud_RC + 
+                   FINCON_RC
+
+
+# (residual) (co)variances
+ HistDisadv ~~ HistDisadv'
+
+result <- lavaan(model, data, meanstructure = "default",
+		 int.ov.free = TRUE, int.lv.free = FALSE,
+				 estimator = "default", se = "default",
+				 missing = "fiml", auto.fix.first = TRUE,
+		 auto.fix.single = TRUE, auto.var = TRUE,
+		 auto.cov.lv.x = TRUE, auto.cov.y = TRUE,
+  		 fixed.x = TRUE, auto.th = TRUE, 
+  		 auto.delta = TRUE)
+
+
+message("\n--- Model Summary ---")
+print(summary(result, result.measures = TRUE, standardized = TRUE))
+message("\n--- Fit Measures (key indices) ---")
+print(fitMeasures(result, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "rmsea.ci.lower", "rmsea.ci.upper", "srmr")))
+message("\n--- Parameter Estimates (loadings) ---")
+pe <- parameterEstimates(result, standardized = TRUE)
+loadings <- subset(pe, op == "=~", select = c(lhs, rhs, est, se, z, pvalue, std.all))
+print(loadings)
+message("\n--- Residual Variances ---")
+resid_vars <- subset(pe, op == "~~" & lhs %in% model & lhs == rhs, select = c(lhs, est, se, z, pvalue))
+print(resid_vars)
+message("\n--- R-squared ---")
+print(inspect(result, "r2"))
+if (have_semTools) {
+message("\n--- Reliability (semTools::reliability) ---")
+print(semTools::reliability(result))
+message("\n--- Average Variance Extracted (semTools::AVE) ---")
+print(semTools::AVE(result))
+} else {
+message("\n(Note: Install 'semTools' to obtain reliability/AVE.)")
+}
+message("\n=== End of CFA report ===")
+
