@@ -1,0 +1,127 @@
+---
+title: "CFA Model"
+output: pdf_document
+date: "2025-11-05"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error = TRUE)
+```
+
+```{r}
+library(psych)
+library(lavaan)
+library(semTools)
+library(GPArotation)
+library(dplyr)
+library(ggplot2)
+```
+
+
+```{r}
+# ------------------------------------------------------------
+# CFA Report: SUCCESS =~ 1*SATIS28 + SUCCESS4 + SLFCHG09 + SLFCHG02
+# ------------------------------------------------------------
+# Usage inside RStudio:
+# setwd("/path/to/6ixPacDataFinal") # point to your project
+# source("cfa_success_report.R") # after pasting/saving this script
+# run_cfa("/Users/jjohnson3/StatsFullData.sav") # or your data file
+data_path <- read.csv("C:/Users/aiden/OneDrive/Documents/STAT 520/Project Files/OfficialDataset_Final.csv")
+run_cfa <- function(data_path) {
+suppressPackageStartupMessages({
+have_semTools <- requireNamespace("semTools", quietly = TRUE)
+})
+if (!file.exists(data_path)) stop("Data file not found: ", data_path)
+read_data <- function(path) {
+if (grepl("\\.sav$", path, ignore.case = TRUE)) {
+if (!requireNamespace("haven", quietly = TRUE)) {
+stop("Install package 'haven' to read .sav files.")
+}
+return(as.data.frame(haven::read_sav(path)))
+}
+utils::read.csv(path, stringsAsFactors = FALSE)
+}
+df <- read_data(data_path)
+indicators <- c("SATIS28", "SUCCESS4", "SLFCHG09", "SLFCHG02")
+missing_vars <- setdiff(indicators, names(df))
+if (length(missing_vars)) stop("Missing variables in dataset: ", paste(missing_vars, collapse = ", "))
+convert_ordered <- function(x) {
+if (inherits(x, "labelled") && requireNamespace("haven", quietly = TRUE)) {
+x <- haven::zap_labels(x)
+}
+if (is.ordered(x)) return(x)
+if (is.factor(x)) return(ordered(x))
+if (is.character(x)) return(ordered(as.factor(x)))
+ordered(as.factor(x))
+}
+df[indicators] <- lapply(df[indicators], convert_ordered)
+model <- '
+SUCCESS =~ 1*SATIS28 + SUCCESS4 + SLFCHG09 + SLFCHG02
+'
+message("\n=== Fitting CFA (WLSMV, ordered indicators) ===")
+fit <- cfa(model, data = df, estimator = "WLSMV", ordered = indicators)
+
+message("\n--- Model Summary ---")
+print(summary(fit, fit.measures = TRUE, standardized = TRUE, rsquare = TRUE))
+message("\n--- Fit Measures (key indices) ---")
+print(fitMeasures(fit, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "rmsea.ci.lower", "rmsea.ci.upper", "srmr")))
+message("\n--- Parameter Estimates (loadings) ---")
+pe <- parameterEstimates(fit, standardized = TRUE)
+loadings <- subset(pe, op == "=~", select = c(lhs, rhs, est, se, z, pvalue, std.all))
+print(loadings)
+message("\n--- Residual Variances ---")
+resid_vars <- subset(pe, op == "~~" & lhs %in% indicators & lhs == rhs, select = c(lhs, est, se, z, pvalue))
+print(resid_vars)
+message("\n--- R-squared ---")
+print(inspect(fit, "r2"))
+if (have_semTools) {
+message("\n--- Reliability (semTools::reliability) ---")
+print(semTools::reliability(fit))
+message("\n--- Average Variance Extracted (semTools::AVE) ---")
+print(semTools::AVE(fit))
+} else {
+message("\n(Note: Install 'semTools' to obtain reliability/AVE.)")
+}
+message("\n=== End of CFA report ===")
+
+#Compute the latent variable scores for students
+lv_scores <- lavaan::lavPredict(fit, type = "lv")
+lv_names  <- colnames(lv_scores)
+success_col <- which(tolower(lv_names) == "success")
+if (length(success_col) == 0L) {
+  stop("No latent variable named 'Success' found in the model. Found: ",
+       paste(lv_names, collapse = ", "))
+}
+# Pull the success scores as numeric values to be added to dataset
+success_scores <- as.numeric(lv_scores[, success_col, drop = TRUE])
+
+# Ensure we have the original data as 'dat'
+if (!exists("dat")) {
+  dat <- read.csv(data_path, stringsAsFactors = FALSE)
+}
+
+dat$Success_Latent <- NA_real_
+rn <- rownames(lv_scores)
+if (!is.null(rn) && all(grepl("^\\d+$", rn))) {
+  idx <- as.integer(rn)
+  idx <- idx[idx >= 1 & idx <= nrow(dat)]
+  dat$Success_Latent[idx] <- success_scores[seq_along(idx)]
+} else if (nrow(lv_scores) == nrow(dat)) {
+  dat$Success_Latent <- success_scores
+} else {
+  dat$Success_Latent[seq_len(nrow(lv_scores))] <- success_scores
+}
+
+# Write back to the same CSV that was used
+write.csv(dat, data_path, row.names = FALSE)
+message("Appended 'Success_Latent' to ", normalizePath(data_path, mustWork = FALSE))
+}
+# Call:
+run_cfa("C:/Users/aiden/OneDrive/Documents/STAT 520/Project Files/OfficialDataset_Final.csv")
+
+
+
+```
+
+
+
