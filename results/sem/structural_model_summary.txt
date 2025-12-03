@@ -1,0 +1,113 @@
+lavaan 0.6-20 ended normally after 1 iteration
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        34
+
+  Number of observations                          4962
+
+Model Test User Model:
+                                                      
+  Test statistic                                62.715
+  Degrees of freedom                                 5
+  P-value (Chi-square)                           0.000
+
+Model Test Baseline Model:
+
+  Test statistic                             21589.501
+  Degrees of freedom                                33
+  P-value                                        0.000
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    0.997
+  Tucker-Lewis Index (TLI)                       0.982
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)               3256.924
+  Loglikelihood unrestricted model (H1)       3288.281
+                                                      
+  Akaike (AIC)                               -6445.848
+  Bayesian (BIC)                             -6224.522
+  Sample-size adjusted Bayesian (SABIC)      -6332.563
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.048
+  90 Percent confidence interval - lower         0.038
+  90 Percent confidence interval - upper         0.059
+  P-value H_0: RMSEA <= 0.050                    0.583
+  P-value H_0: RMSEA >= 0.080                    0.000
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.012
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+Regressions:
+                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+  HistDisadv_fs ~                                                        
+    INCOME  (h_nc)    -0.113    0.000 -359.953    0.000   -0.113   -0.851
+    FINCON_ (h_fn)     0.097    0.001   71.642    0.000    0.097    0.151
+    FrsG_RC (h_fg)     0.108    0.002   44.278    0.000    0.108    0.124
+    HSGPA   (h_hs)     0.004    0.001    6.099    0.000    0.004    0.012
+    FATHEDU (h_ft)     0.000    0.001    0.802    0.422    0.000    0.002
+    MOTHEDU (h_mt)     0.001    0.001    2.462    0.014    0.001    0.006
+    CITIZEN (h_ct)    -0.063    0.003  -18.829    0.000   -0.063   -0.039
+    RACEGRO (h_rc)     0.002    0.002    0.996    0.319    0.002    0.005
+    UnRS_RC (h_nd)     0.067    0.004   15.331    0.000    0.067    0.074
+    DSst_RC (h_ds)    -0.006    0.011   -0.569    0.570   -0.006   -0.001
+  InstitEngage_fs ~                                                      
+    HstDsd_ (i_hd)    -0.175    0.104   -1.681    0.093   -0.175   -0.172
+    INCOME  (i_nc)    -0.014    0.012   -1.202    0.229   -0.014   -0.106
+    FINCON_ (i_fn)    -0.008    0.014   -0.536    0.592   -0.008   -0.012
+    FrsG_RC (i_fg)    -0.024    0.017   -1.403    0.160   -0.024   -0.027
+    CITIZEN (i_c2)    -0.048    0.026   -1.872    0.061   -0.048   -0.029
+    RACEGRO (i_rc)    -0.032    0.012   -2.788    0.005   -0.032   -0.096
+    UnRS_RC (i_nd)     0.079    0.033    2.420    0.016    0.079    0.085
+    DSst_RC (i_ds)     0.101    0.080    1.261    0.207    0.101    0.018
+  Success_Latent ~                                                       
+    InsttE_ (s_ie)     0.481    0.011   45.070    0.000    0.481    0.539
+    HstDsd_ (s_hd)    -0.048    0.078   -0.615    0.538   -0.048   -0.053
+    INCOME  (s_nc)    -0.006    0.009   -0.703    0.482   -0.006   -0.053
+    FINCON_ (s_fn)    -0.016    0.011   -1.551    0.121   -0.016   -0.028
+    FrsG_RC (s_fg)    -0.007    0.013   -0.579    0.563   -0.007   -0.009
+    HSGPA   (s_hs)     0.011    0.003    3.246    0.001    0.011    0.039
+    CITIZEN (s_ct)    -0.024    0.019   -1.249    0.212   -0.024   -0.016
+    RACEGRO (s_rc)    -0.008    0.009   -0.940    0.347   -0.008   -0.027
+    UnRS_RC (s_nd)     0.046    0.025    1.852    0.064    0.046    0.055
+    DSst_RC (s_ds)    -0.082    0.060   -1.358    0.174   -0.082   -0.016
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+   .HistDisadv_fs     0.972    0.014   67.946    0.000    0.972    2.362
+   .InstitEngag_fs    0.185    0.143    1.299    0.194    0.185    0.443
+   .Success_Latent    0.131    0.108    1.210    0.226    0.131    0.351
+
+Variances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+   .HistDisadv_fs     0.003    0.000   49.810    0.000    0.003    0.019
+   .InstitEngag_fs    0.173    0.003   49.810    0.000    0.173    0.989
+   .Success_Latent    0.098    0.002   49.810    0.000    0.098    0.703
+
+R-Square:
+                   Estimate
+    HistDisadv_fs     0.981
+    InstitEngag_fs    0.011
+    Success_Latent    0.297
+
+Defined Parameters:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+    indrct_HstDsdv   -0.084    0.050   -1.680    0.093   -0.084   -0.093
+    indirct_INCOME    0.009    0.006    1.680    0.093    0.009    0.079
+    indirct_FINCON   -0.008    0.005   -1.679    0.093   -0.008   -0.014
+    indirct_FrstGn   -0.009    0.005   -1.678    0.093   -0.009   -0.012
+    indr_RACEGROUP   -0.000    0.000   -0.857    0.392   -0.000   -0.000
+    indrct_UndrRpS   -0.006    0.003   -1.670    0.095   -0.006   -0.007
+
