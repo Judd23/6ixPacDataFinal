@@ -15,7 +15,12 @@ library(semTools)
 library(GPArotation)
 library(dplyr)
 library(ggplot2)
-data <- read.csv("C:/Users/aiden/OneDrive/Documents/STAT 520/Project Files/OfficialDataset_Final.csv")
+
+data_path <- file.path("data", "clean", "OfficialDataset_Final.csv")
+if (!file.exists(data_path)) {
+	stop("Missing clean dataset at ", data_path)
+}
+data <- read.csv(data_path)
 
 
 have_semTools <- requireNamespace("semTools", quietly = TRUE)
@@ -31,8 +36,8 @@ model <-'
 
 result <- lavaan(model, data, meanstructure = "default",
 		 int.ov.free = TRUE, int.lv.free = FALSE,
-		 estimator = "default", se = "default",
-		 missing = "listwise", auto.fix.first = TRUE,
+				 estimator = "default", se = "default",
+				 missing = "fiml", auto.fix.first = TRUE,
 		 auto.fix.single = TRUE, auto.var = TRUE,
 		 auto.cov.lv.x = TRUE, auto.cov.y = TRUE,
   		 fixed.x = TRUE, auto.th = TRUE, 
