@@ -1,0 +1,274 @@
+Step 1: Data/path setup, feature selection, and preprocessing
+
+import pandas as pd
+import numpy as np
+from pathlib import Path
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+if &#39;DATA_PATH&#39; in globals() and Path(DATA_PATH).exists():
+data_path_engage = Path(DATA_PATH)
+else:
+roots = [Path.cwd().resolve()] + list(Path.cwd().resolve().parents)
+roots.append(Path.home() / &#39;Documents&#39; / &#39;GitHub&#39; / &#39;6ixPacDataFinal&#39;)
+data_path_engage = None
+for root in roots:
+candidate = root / &#39;data&#39; / &#39;clean&#39; / &#39;OfficialDataset_Final.csv&#39;
+if candidate.exists():
+data_path_engage = candidate
+break
+if data_path_engage is None:
+raise FileNotFoundError(&#39;Unable to locate OfficialDataset_Final.csv for engagement clustering.&#39;)
+engagement_features = [
+&#39;SLFCHG01&#39;, &#39;SLFCHG02&#39;, &#39;SLFCHG03&#39;, &#39;SLFCHG04&#39;, &#39;SLFCHG09&#39;,
+&#39;SATIS01&#39;, &#39;SATIS02&#39;, &#39;SATIS07&#39;, &#39;SATIS13&#39;, &#39;SATIS15&#39;, &#39;SATIS25&#39;, &#39;SATIS28&#39;,
+&#39;SUCCESS4&#39;, &#39;SUCCESS7&#39;,
+&#39;CSSHPW01&#39;, &#39;CSSHPW02&#39;, &#39;CSSHPW03&#39;, &#39;CSSHPW05&#39;, &#39;CSSHPW08&#39;
+]
+external_features = [
+&#39;COLLGPA&#39;, &#39;Success_Latent&#39;, &#39;HistDisadv_fs&#39;, &#39;InstitEngage_fs&#39;,
+&#39;FirstGen_RC&#39;, &#39;UndrRepStud_RC&#39;, &#39;INCOME&#39;, &#39;FINCON_RC&#39;,
+&#39;RACEGROUP&#39;, &#39;FATHEDUC&#39;, &#39;MOTHEDUC&#39;
+]
+data_engage = pd.read_csv(data_path_engage)
+available_engage = [c for c in engagement_features if c in data_engage.columns]
+missing_engage = sorted(set(engagement_features) - set(available_engage))
+if missing_engage:
+print(&#39;Skipping missing engagement features:&#39;, missing_engage)
+X_full = data_engage[available_engage].apply(pd.to_numeric, errors=&#39;coerce&#39;)
+valid_rows = X_full.notna().all(axis=1)
+X = X_full[valid_rows]
+print(f&#39;Rows available for engagement clustering: {len(X)} of {len(data_engage)}&#39;)
+
+Step 2: K-means fit plus table creation/export
+
+scaler_engage = StandardScaler()
+X_scaled_engage = scaler_engage.fit_transform(X)
+k = 3
+kmeans_engage = KMeans(n_clusters=k, random_state=42, n_init=10, max_iter=300)
+labels_engage = kmeans_engage.fit_predict(X_scaled_engage)
+silhouette_engage = silhouette_score(X_scaled_engage, labels_engage)
+print({&#39;silhouette_k3&#39;: float(silhouette_engage)})
+centers_scaled = kmeans_engage.cluster_centers_
+centers_original = scaler_engage.inverse_transform(centers_scaled)
+cluster_centers_k3 = pd.DataFrame(centers_original, columns=available_engage)
+cluster_centers_k3.insert(0, &#39;cluster_k3&#39;, np.arange(k))
+students_engage = data_engage.copy()
+students_engage[&#39;cluster_k3&#39;] = np.nan
+students_engage.loc[valid_rows, &#39;cluster_k3&#39;] = labels_engage
+available_externals = [c for c in external_features if c in students_engage.columns]
+student_subset = students_engage[[&#39;cluster_k3&#39;] + available_externals + available_engage]
+cluster_summary_k3 = (
+student_subset.dropna(subset=[&#39;cluster_k3&#39;])
+.groupby(&#39;cluster_k3&#39;)
+.mean(numeric_only=True)
+.reset_index()
+)
+output_dir_k3 = Path(data_path_engage).parents[2] / &#39;results&#39; / &#39;kmeans_engagement_k3&#39;
+output_dir_k3.mkdir(parents=True, exist_ok=True)
+cluster_centers_path = output_dir_k3 / &#39;cluster_centers_k3.csv&#39;
+student_clusters_path = output_dir_k3 / &#39;student_clusters_k3.csv&#39;
+cluster_summary_path = output_dir_k3 / &#39;cluster_summary_k3.csv&#39;
+cluster_centers_k3.to_csv(cluster_centers_path, index=False)
+student_subset.to_csv(student_clusters_path, index=False)
+cluster_summary_k3.to_csv(cluster_summary_path, index=False)
+cluster_summary_k3
+
+1. Outcome comparison bar chart - plots means for GPA, Success_Latent, Institutional
+Engagement:
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from pathlib import Path
+cluster_palette = {0: &#39;#FDD835&#39;, 1: &#39;#2E7D32&#39;, 2: &#39;#C62828&#39;} # yellow, green, red
+
+cluster_names = {0: &#39;Moderate&#39;, 1: &#39;Thriving&#39;, 2: &#39;Struggling&#39;}
+if &#39;data_path_engage&#39; in globals() and Path(data_path_engage).exists():
+summary_path = Path(data_path_engage).parents[2] / &#39;results&#39; / &#39;kmeans_engagement_k3&#39; /
+&#39;cluster_summary_k3.csv&#39;
+else:
+summary_path = Path(&#39;results&#39;) / &#39;kmeans_engagement_k3&#39; / &#39;cluster_summary_k3.csv&#39;
+summary = pd.read_csv(summary_path).set_index(&#39;cluster_k3&#39;)
+outcome_vars = [&#39;COLLGPA&#39;, &#39;Success_Latent&#39;, &#39;InstitEngage_fs&#39;]
+outcomes = summary[outcome_vars]
+cluster_order = [1, 0, 2] # Thriving, Moderate, Struggling
+cluster_order = [c for c in cluster_order if c in outcomes.index.astype(int)]
+x = np.arange(len(outcome_vars))
+width = 0.24
+fig, ax = plt.subplots(figsize=(8, 4))
+offset = (len(cluster_order) - 1) / 2
+for idx, cluster_id in enumerate(cluster_order):
+cluster_row = outcomes.loc[float(cluster_id)]
+ax.bar(
+x + (idx - offset) * width,
+cluster_row.values,
+width=width,
+label=f&quot;Cluster {cluster_id} – {cluster_names[cluster_id]}&quot;,
+color=cluster_palette[cluster_id]
+)
+ax.set_xticks(x)
+ax.set_xticklabels(outcome_vars)
+ax.set_ylabel(&#39;Mean value&#39;)
+ax.set_title(&#39;Mean GPA, Success_Latent, and Institutional Engagement by cluster&#39;)
+ax.legend()
+plt.tight_layout()
+plt.show()
+
+ PCA projection scatter (Cell 54) – two principal components of the engagement
+features, colored by cluster:
+ import pandas as pd
+ import numpy as np
+ import matplotlib.pyplot as plt
+ from pathlib import Path
+ from sklearn.preprocessing import StandardScaler
+ from sklearn.decomposition import PCA
+
+ cluster_palette = {0: &#39;#FDD835&#39;, 1: &#39;#2E7D32&#39;, 2: &#39;#C62828&#39;}
+ cluster_names = {0: &#39;Moderate&#39;, 1: &#39;Thriving&#39;, 2: &#39;Struggling&#39;}
+
+ if &#39;data_path_engage&#39; in globals() and Path(data_path_engage).exists():
+ data_path = Path(data_path_engage)
+ else:
+ data_path = Path(&#39;data&#39;) / &#39;clean&#39; / &#39;OfficialDataset_Final.csv&#39;
+
+ student_clusters_path = data_path.parents[2] / &#39;results&#39; / &#39;kmeans_engagement_k3&#39; /
+&#39;student_clusters_k3.csv&#39;
+ engagement_features = [
+ &#39;SLFCHG01&#39;, &#39;SLFCHG02&#39;, &#39;SLFCHG03&#39;, &#39;SLFCHG04&#39;, &#39;SLFCHG09&#39;,
+ &#39;SATIS01&#39;, &#39;SATIS02&#39;, &#39;SATIS07&#39;, &#39;SATIS13&#39;, &#39;SATIS15&#39;, &#39;SATIS25&#39;, &#39;SATIS28&#39;,
+ &#39;SUCCESS4&#39;, &#39;SUCCESS7&#39;,
+ &#39;CSSHPW01&#39;, &#39;CSSHPW02&#39;, &#39;CSSHPW03&#39;, &#39;CSSHPW05&#39;, &#39;CSSHPW08&#39;
+ ]
+
+ raw_df = pd.read_csv(data_path)
+ clusters_df = pd.read_csv(student_clusters_path)
+ raw_df = raw_df.reset_index(drop=True)
+ clusters_df = clusters_df.reset_index(drop=True)
+ raw_df[&#39;cluster_k3&#39;] = clusters_df[&#39;cluster_k3&#39;]
+
+ X = raw_df[engagement_features].apply(pd.to_numeric, errors=&#39;coerce&#39;)
+ mask = X.notna().all(axis=1)
+ X_valid = X[mask]
+ labels = raw_df.loc[mask, &#39;cluster_k3&#39;].astype(int).values
+
+ scaler = StandardScaler()
+ X_scaled = scaler.fit_transform(X_valid)
+
+ pca = PCA(n_components=2, random_state=42)
+ X_pca = pca.fit_transform(X_scaled)
+
+ fig, ax = plt.subplots(figsize=(7, 5))
+ for cluster_id in [1, 0, 2]:
+ cluster_mask = labels == cluster_id
+ if not np.any(cluster_mask):
+ continue
+ ax.scatter(
+ X_pca[cluster_mask, 0],
+ X_pca[cluster_mask, 1],
+ color=cluster_palette[cluster_id],
+ alpha=0.6,
+ s=18,
+ label=f&quot;Cluster {cluster_id} – {cluster_names[cluster_id]}&quot;
+ )
+
+ ax.set_xlabel(&#39;PC1&#39;)
+ ax.set_ylabel(&#39;PC2&#39;)
+
+ ax.set_title(&#39;PCA of engagement/satisfaction features colored by cluster&#39;)
+ ax.legend(title=&#39;Cluster&#39;, frameon=False)
+
+ plt.tight_layout()
+ plt.show()
+
+ print(&#39;Explained variance by PC1 and PC2:&#39;, np.round(pca.explained_variance_ratio_, 4))
+
+3. Standardized engagement heatmap - z-scored means
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from pathlib import Path
+cluster_palette = {0: &#39;#FDD835&#39;, 1: &#39;#2E7D32&#39;, 2: &#39;#C62828&#39;}
+cluster_names = {0: &#39;Moderate&#39;, 1: &#39;Thriving&#39;, 2: &#39;Struggling&#39;}
+if &#39;data_path_engage&#39; in globals() and Path(data_path_engage).exists():
+cluster_summary_path = Path(data_path_engage).parents[2] / &#39;results&#39; / &#39;kmeans_engagement_k3&#39; /
+&#39;cluster_summary_k3.csv&#39;
+else:
+cluster_summary_path = Path(&#39;results&#39;) / &#39;kmeans_engagement_k3&#39; / &#39;cluster_summary_k3.csv&#39;
+summary = pd.read_csv(cluster_summary_path).set_index(&#39;cluster_k3&#39;)
+engagement_features = [
+&#39;SLFCHG01&#39;, &#39;SLFCHG02&#39;, &#39;SLFCHG03&#39;, &#39;SLFCHG04&#39;, &#39;SLFCHG09&#39;,
+&#39;SATIS01&#39;, &#39;SATIS02&#39;, &#39;SATIS07&#39;, &#39;SATIS13&#39;, &#39;SATIS15&#39;, &#39;SATIS25&#39;, &#39;SATIS28&#39;,
+&#39;SUCCESS4&#39;, &#39;SUCCESS7&#39;,
+&#39;CSSHPW01&#39;, &#39;CSSHPW02&#39;, &#39;CSSHPW03&#39;, &#39;CSSHPW05&#39;, &#39;CSSHPW08&#39;
+]
+engagement_features_avail = [c for c in engagement_features if c in summary.columns]
+heat_data = summary[engagement_features_avail]
+order = [float(c) for c in [1, 0, 2] if float(c) in heat_data.index]
+if order:
+heat_data = heat_data.reindex(order)
+heat_data_z = (heat_data - heat_data.mean(axis=0)) / heat_data.std(axis=0)
+fig, ax = plt.subplots(figsize=(12, 4))
+im = ax.imshow(heat_data_z.values, aspect=&#39;auto&#39;, cmap=&#39;coolwarm&#39;, vmin=-2, vmax=2)
+ytick_labels = [f&quot;Cluster {int(c)} – {cluster_names[int(c)]}&quot; for c in heat_data_z.index]
+ax.set_yticks(range(len(heat_data_z.index)))
+ax.set_yticklabels(ytick_labels)
+for tick, cluster_id in zip(ax.get_yticklabels(), heat_data_z.index.astype(int)):
+tick.set_color(cluster_palette[cluster_id])
+
+ax.set_xticks(range(len(engagement_features_avail)))
+ax.set_xticklabels(engagement_features_avail, rotation=45, ha=&#39;right&#39;)
+ax.set_title(&#39;Standardized cluster means for engagement / satisfaction / growth&#39;)
+cbar = plt.colorbar(im, ax=ax)
+cbar.set_label(&#39;Standardized mean (z-score)&#39;)
+plt.tight_layout()
+plt.show()
+
+Radar plot of key satisfaction indicators – rescaled view of seven survey
+items:
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from pathlib import Path
+cluster_palette = {0: &#39;#FDD835&#39;, 1: &#39;#2E7D32&#39;, 2: &#39;#C62828&#39;}
+cluster_names = {0: &#39;Moderate&#39;, 1: &#39;Thriving&#39;, 2: &#39;Struggling&#39;}
+if &#39;data_path_engage&#39; in globals() and Path(data_path_engage).exists():
+summary_path = Path(data_path_engage).parents[2] / &#39;results&#39; / &#39;kmeans_engagement_k3&#39; /
+&#39;cluster_summary_k3.csv&#39;
+else:
+summary_path = Path(&#39;results&#39;) / &#39;kmeans_engagement_k3&#39; / &#39;cluster_summary_k3.csv&#39;
+summary = pd.read_csv(summary_path).set_index(&#39;cluster_k3&#39;)
+radar_vars = [
+&#39;SLFCHG01&#39;,
+&#39;SLFCHG03&#39;,
+&#39;SLFCHG04&#39;,
+&#39;SATIS13&#39;,
+&#39;SATIS07&#39;,
+&#39;SATIS25&#39;,
+&#39;SATIS28&#39;
+]
+radar_vars = [c for c in radar_vars if c in summary.columns]
+radar_data = summary[radar_vars]
+order = [float(c) for c in [1, 0, 2] if float(c) in radar_data.index]
+if order:
+radar_data = radar_data.reindex(order)
+radar_scaled = (radar_data - radar_data.min(axis=0)) / (radar_data.max(axis=0) - radar_data.min(axis=0))
+radar_scaled = radar_scaled.fillna(0.5)
+n_vars = len(radar_vars)
+angles = np.linspace(0, 2 * np.pi, n_vars, endpoint=False)
+
+angles = np.concatenate([angles, angles[:1]])
+fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+for cluster_id, row in radar_scaled.iterrows():
+cid = int(cluster_id)
+values = np.concatenate([row.values, row.values[:1]])
+color = cluster_palette[cid]
+label = f&quot;Cluster {cid} – {cluster_names[cid]}&quot;
+ax.plot(angles, values, marker=&#39;o&#39;, label=label, color=color)
+ax.fill(angles, values, alpha=0.1, color=color)
+ax.set_xticks(angles[:-1])
+ax.set_xticklabels(radar_vars)
+ax.set_yticklabels([])
+ax.set_title(&#39;Radar plot of growth and satisfaction by cluster&#39;)
+ax.legend(loc=&#39;upper right&#39;, bbox_to_anchor=(1.2, 1.1))
+plt.tight_layout()
+plt.show()
